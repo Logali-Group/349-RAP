@@ -47,6 +47,7 @@ define root view entity z349_r_travel_lgl
       @Semantics.systemDateTime.lastChangedAt: true
       last_changed_at       as LastChangedAt,
 
+
       _Booking,
       _Agency,
       _Customer,
