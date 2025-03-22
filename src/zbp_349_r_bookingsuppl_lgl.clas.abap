@@ -1,0 +1,5 @@
+CLASS zbp_349_r_bookingsuppl_lgl DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF z349_r_travel_lgl.
+ENDCLASS.
+
+CLASS zbp_349_r_bookingsuppl_lgl IMPLEMENTATION.
+ENDCLASS.
