@@ -9,9 +9,10 @@ draft table z349_travel_d
 lock master
 total etag LastChangedAt
 authorization master ( instance, global )
-etag master LocalLastChangedAt{
+etag master LocalLastChangedAt
+{
   create ( precheck );
-  update;
+  update ( precheck );
   delete;
   association _Booking { create ( features : instance, authorization : update ); with draft; }
 

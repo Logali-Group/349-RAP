@@ -1,0 +1,17 @@
+unmanaged implementation in class zbp_r_hc_master unique;
+strict ( 2 );
+
+define behavior for Z_R_HC_MASTER alias HCMMaster
+//late numbering
+lock master
+authorization master ( instance )
+etag master CreatedBy
+{
+  create;
+  update;
+  delete;
+  field ( readonly ) EmployeeNumber;
+  field ( mandatory : create ) EmployeeName;
+
+
+}

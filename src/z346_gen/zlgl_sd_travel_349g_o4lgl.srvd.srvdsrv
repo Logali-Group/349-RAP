@@ -1,0 +1,12 @@
+@EndUserText: {
+  label: 'Service Definition for Travel'
+}
+@ObjectModel: {
+  leadingEntity: {
+    name: 'ZLGL_C_TRAVEL_349GLGL'
+  }
+}
+define service ZLGL_SD_TRAVEL_349G_O4LGL
+  provider contracts odata_v4_ui {
+  expose ZLGL_C_TRAVEL_349GLGL as Travel;
+}

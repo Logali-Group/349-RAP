@@ -1,0 +1,59 @@
+@Metadata.layer: #CORE
+@Search.searchable: true
+@UI: { headerInfo: { typeName: 'Employee',
+               typeNamePlural: 'Employees',
+                        title: { type: #STANDARD,
+                        label: 'Employees',
+                        value: 'EmployeeName' } } }
+annotate entity Z_C_HC_MASTER with
+{
+  @UI.facet: [ { id: 'Employees',
+              purpose: #STANDARD,
+                 type: #IDENTIFICATION_REFERENCE,
+                label: 'Employee',
+             position: 5 } ]
+  @Search.defaultSearchElement: true
+  @UI: {
+  lineItem      : [ { position: 10, label: 'Employee Number', importance: #HIGH } ],
+  identification: [ { position: 5, label : 'Employee Number' } ] }
+  EmployeeNumber;
+  @UI: {
+  identification: [ { position: 20, label: 'Employee Name' } ],
+  selectionField: [ { position: 10 } ] }
+  EmployeeName;
+  @UI: {
+  lineItem      : [ { position: 30, label: 'Employee Department', importance: #HIGH } ],
+  identification: [ { position: 30, label: 'Employee Department' } ],
+  selectionField: [ { position: 20 } ] }
+  EmployeeDepartment;
+  @UI: {
+  lineItem      : [ { position: 40, label: 'Employee Status', importance: #HIGH } ],
+  identification: [ { position: 40, label: 'Employee Status' } ] }
+  EmployeeStatus;
+  @UI: {
+  lineItem      : [ { position: 50, label: 'Job Title', importance: #MEDIUM } ],
+  identification: [ { position: 50, label: 'Job Title' } ],
+  selectionField: [ { position: 30 } ] }
+  JobTitle;
+  @UI: {
+  identification: [ { position: 60, label: 'Start Date' } ] }
+  StartDate;
+  @UI: {
+  identification: [ { position: 80, label: 'End Date' } ] }
+  EndDate;
+  @UI: {
+  lineItem      : [ { position: 80, label: 'Email', importance: #LOW } ],
+  identification: [ { position: 90, label: 'Email' } ] }
+  Email;
+  @UI: {
+  identification: [ { position: 100, label: 'Manager Number' } ] }
+  ManagerNumber;
+  @UI: {
+  lineItem      : [ { position: 100, label: 'Manager Name', importance: #LOW } ],
+  identification: [ { position: 110, label: 'Manager Name' } ] }
+  ManagerName;
+  @UI: {
+  identification: [ { position: 120, label: 'Manager Department' } ] }
+  ManagerDepartment;
+
+}

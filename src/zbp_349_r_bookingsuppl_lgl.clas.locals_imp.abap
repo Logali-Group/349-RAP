@@ -33,6 +33,20 @@ class lhc_BookingSupplement implementation.
   endmethod.
 
   method calculateTotalPrice.
+
+    " Parent UUIDs
+    read entities of z349_r_travel_lgl in local mode
+         entity BookingSupplement by \_Travel
+         fields ( TravelUUID  )
+         with corresponding #(  keys  )
+         result data(travels).
+
+    " Re-Calculation on Root Node
+    modify entities of z349_r_travel_lgl in local mode
+           entity Travel
+           execute reCalcTotalPrice
+           from corresponding  #( travels ).
+
   endmethod.
 
   method setBookSupplNumber.
@@ -84,6 +98,75 @@ class lhc_BookingSupplement implementation.
   endmethod.
 
   method validateSupplement.
+
+    read entities of z349_r_travel_lgl in local mode
+         entity BookingSupplement
+         fields ( SupplementID )
+         with corresponding #(  keys )
+         result data(bookingsupplements)
+         failed data(read_failed).
+
+    failed = corresponding #( deep read_failed ).
+
+    read entities of z349_r_travel_lgl in local mode
+         entity BookingSupplement by \_Booking
+         from corresponding #( bookingsupplements )
+         link data(booksuppl_booking_links).
+
+    read entities of z349_r_travel_lgl in local mode
+         entity BookingSupplement by \_Travel
+         from corresponding #( bookingsupplements )
+         link data(booksuppl_travel_links).
+
+    data supplements type sorted table of /dmo/supplement with unique key supplement_id.
+
+    supplements = corresponding #( bookingsupplements discarding duplicates mapping supplement_id = SupplementID except * ).
+    delete supplements where supplement_id is initial.
+
+    if  supplements is not initial.
+      " Check if customer ID exists
+      select from /dmo/supplement fields supplement_id
+                                  for all entries in @supplements
+                                  where supplement_id = @supplements-supplement_id
+      into table @data(valid_supplements).
+    endif.
+
+    loop at bookingsupplements assigning field-symbol(<bookingsupplement>).
+
+      append value #(  %tky        = <bookingsupplement>-%tky
+                       %state_area = 'VALIDATE_SUPPLEMENT'
+                    ) to reported-bookingsupplement.
+
+      if <bookingsupplement>-SupplementID is  initial.
+        append value #( %tky = <bookingsupplement>-%tky ) to failed-bookingsupplement.
+
+        append value #( %tky                  = <bookingsupplement>-%tky
+                        %state_area           = 'VALIDATE_SUPPLEMENT'
+                        %msg                  = new /dmo/cm_flight_messages(
+                                                                textid = /dmo/cm_flight_messages=>enter_supplement_id
+                                                                severity = if_abap_behv_message=>severity-error )
+                        %path                 = value #( booking-%tky = booksuppl_booking_links[ key id  source-%tky = <bookingsupplement>-%tky ]-target-%tky
+                                                         travel-%tky  = booksuppl_travel_links[  key id  source-%tky = <bookingsupplement>-%tky ]-target-%tky )
+                        %element-SupplementID = if_abap_behv=>mk-on
+                       ) to reported-bookingsupplement.
+
+
+      elseif <bookingsupplement>-SupplementID is not initial and not line_exists( valid_supplements[ supplement_id = <bookingsupplement>-SupplementID ] ).
+        append value #(  %tky = <bookingsupplement>-%tky ) to failed-bookingsupplement.
+
+        append value #( %tky                  = <bookingsupplement>-%tky
+                        %state_area           = 'VALIDATE_SUPPLEMENT'
+                        %msg                  = new /dmo/cm_flight_messages(
+                                                                textid = /dmo/cm_flight_messages=>supplement_unknown
+                                                                severity = if_abap_behv_message=>severity-error )
+                        %path                 = value #( booking-%tky = booksuppl_booking_links[ key id  source-%tky = <bookingsupplement>-%tky ]-target-%tky
+                                                          travel-%tky = booksuppl_travel_links[  key id  source-%tky = <bookingsupplement>-%tky ]-target-%tky )
+                        %element-SupplementID = if_abap_behv=>mk-on
+                       ) to reported-bookingsupplement.
+      endif.
+
+    endloop.
+
   endmethod.
 
 endclass.

@@ -77,6 +77,10 @@ annotate entity z349_c_travel_lgl with
   @UI: { lineItem: [{ position: 70, importance: #HIGH }],
         identification: [{ position: 70 }]}
   TotalPrice;
+  
+  @UI: { lineItem: [{ position: 71, importance: #HIGH }],
+        identification: [{ position: 71 }]}
+  PriceWithVAT;  
 
   @UI: { lineItem: [{ position: 80, importance: #MEDIUM }],
           identification: [{ position: 80 }]}
